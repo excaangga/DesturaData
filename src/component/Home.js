@@ -28,16 +28,19 @@ export default function Home() {
                     Data Remaja
                 </div>
                 <div className='pt-3 text-gray-100'>
-                    <div className='px-auto' onClick={toggleKelompokDropdown}>Akses Data</div>
+                    <div className='pb-2 px-auto cursor-pointer select-none' onClick={toggleKelompokDropdown}>Akses Data</div>
                     {dataKelompokVisible && KELOMPOK && (
-                        <div className='pl-5'>
+                        <div className=''>
                             {KELOMPOK.map((item, index) => (
-                                <Link to={`/akses-data/${item.id_kelompok}`} key={index}>
-                                    <div className='pt-3' key={index}>{item.nama_kelompok}</div>
+                                <Link to={`/akses-data/${item.id_kelompok}`} key={index} className='cursor-pointer'>
+                                    <div className='py-2 pl-5 hover:bg-gray-500' key={index}>{item.nama_kelompok}</div>
                                 </Link>
                             ))}
                         </div>
                     )}
+                </div>
+                <div className='pt-3 text-gray-100'>
+                    Summary Kelompok [soon]
                 </div>
             </div>
             <div className='px-10 py-5 border-b border-gray-500'>
@@ -45,13 +48,13 @@ export default function Home() {
                     Pelaporan
                 </div>
                 <div className='pt-3 text-gray-100'>
-                    Pelaporan Turba
+                    Pelaporan Turba [soon]
                 </div>
                 <div className='pt-3 text-gray-100'>
-                    Pelaporan KU
+                    Pelaporan KU [soon]
                 </div>
                 <div className='pt-3 text-gray-100'>
-                    Pelaporan Lainnya
+                    Pelaporan Lainnya [soon]
                 </div>
             </div>
             <div className='px-10 py-5 border-b border-gray-500'>
@@ -59,7 +62,7 @@ export default function Home() {
                     Presensi
                 </div>
                 <div className='pt-3 text-gray-100'>
-                    Pengajian Remaja Desa
+                    Pengajian Remaja Desa [soon]
                 </div>
             </div>
         </div>

@@ -52,10 +52,12 @@ export default function AksesData() {
     };
 
     const handleDelete = async (personId) => {
-        const { error } = await supabase.from('PERSON').delete().eq('id_person', personId);
-        if (!error) {
-            // Refresh the data after deleting
-            fetchData();
+        if (window.confirm('Hapus data ini?')) {
+            const { error } = await supabase.from('PERSON').delete().eq('id_person', personId);
+            if (!error) {
+                // Refresh the data after deleting
+                fetchData();
+            }
         }
     };
 
@@ -66,7 +68,7 @@ export default function AksesData() {
             )
                 :
                 (
-                    <div>
+                    <div className="overflow-auto">
                         {KELOMPOK && (
                             <div className='px-5 py-5 text-2xl text-gray-500 border-b border-gray-500'>
                                 {KELOMPOK[0].nama_kelompok}
@@ -82,6 +84,7 @@ export default function AksesData() {
                                         <div className="px-2 py-1 border rounded-md">Perempuan</div>
                                     }
                                     <div className="ml-3 px-2 py-1 border rounded-md">{item.STATUS.nama_status}</div>
+                                    <div className="ml-3 px-2 py-1 border rounded-md">{item.usia_person}</div>
                                 </div>
                                 <div className="flex justify-center mt-4">
                                     <button className="mr-3 w-14 rounded-md py-1 bg-yellow-300 text-xs text-gray-800" onClick={() => handleEdit(item.id_person)}>Edit</button>
@@ -90,9 +93,9 @@ export default function AksesData() {
                             </div>
                         ))}
                         {/* FAB */}
-                        <div className="fixed bottom-10 right-10">
+                        <div className="fixed md:absolute bottom-10 right-10 md:bottom-20 md:right-10">
                             <button
-                                className="w-12 h-12 bg-green-300 text-white rounded-full shadow-lg flex items-center justify-center"
+                                className="w-12 h-12 bg-green-300 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-green-100"
                                 onClick={handleAddRecord}
                             >
                                 <svg
