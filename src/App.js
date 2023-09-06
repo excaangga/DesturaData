@@ -6,7 +6,7 @@ import Home from './component/Home';
 export default function App() {
   return (
     <Router>
-      <div className="container relative md:max-w-[480px] h-screen mx-auto font-poppins text-gray-100 bg-gray-800 flex flex-col">
+      <div className="container relative md:max-w-[640px] h-screen mx-auto font-poppins text-gray-100 bg-gray-800 flex flex-col">
         {/* HEADER */}
         <div className="h-[10%] bg-gray-800 flex items-center border-b border-gray-500">
           <Link to={'/'} className='select-none'>

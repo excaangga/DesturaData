@@ -1,15 +1,23 @@
 import { useParams } from "react-router-dom";
 import { createClient } from '@supabase/supabase-js';
 import React, { useEffect, useState } from 'react';
+import Modal from 'react-modal';
 
 const supabaseUrl = 'https://fjqkgesfphrdvtuvgxvt.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqcWtnZXNmcGhyZHZ0dXZneHZ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTMyNDUxMzksImV4cCI6MjAwODgyMTEzOX0.OqCMygU_Y1ugMtXRrN7YPQuGSqOWJ9cT3AFAqFF-BEw';
 const supabase = createClient(supabaseUrl, supabaseKey);
+
+Modal.setAppElement('#root');
+
 export default function AksesData() {
     const { idKelompok } = useParams();
     const [loading, setLoading] = useState(true);
     const [PERSON, setPERSON] = useState(null);
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [formData, setFormData] = useState({});
+    const [kelompokChoice, setKelompokChoice] = useState([]);
     const [KELOMPOK, setKELOMPOK] = useState(null);
+    const [statusChoice, setStatusChoice] = useState([]);
 
     const fetchData = async () => {
         try {
@@ -38,27 +46,87 @@ export default function AksesData() {
         }
     };
 
+    const fetchKelompok = async () => {
+        const { data, error } = await supabase
+            .from('KELOMPOK')
+            .select('*');
+
+        if (error) console.error('Error occurred while fetching kelompok');
+        else setKelompokChoice(data);
+    };
+
+    const fetchStatus = async () => {
+        const { data, error } = await supabase
+            .from('STATUS')
+            .select('*');
+
+        if (error) console.error('Error occurred while fetching status');
+        else setStatusChoice(data);
+    };
+
     useEffect(() => {
         fetchData();
+        fetchKelompok();
+        fetchStatus();
     }, [idKelompok]);
 
     const handleAddRecord = () => {
-        // Implement the logic to show a modal or navigate to a form for adding records
+        setFormData({});
+        setModalOpen(true);
     };
 
     const handleEdit = (personId) => {
-        // Implement edit functionality using Supabase for the specific person with personId
-        // For example: navigate to an edit page with the person's data
+        const personData = PERSON.find(item => item.id_person === personId);
+        setFormData(personData);
+        setModalOpen(true);
     };
 
     const handleDelete = async (personId) => {
         if (window.confirm('Hapus data ini?')) {
             const { error } = await supabase.from('PERSON').delete().eq('id_person', personId);
-            if (!error) {
-                // Refresh the data after deleting
-                fetchData();
-            }
+            if (error) console.error('Error deleting data');
+            else fetchData();
         }
+    };
+
+    const handleSave = async () => {
+        if (formData.id_person) {
+            const { error } = await supabase
+                .from('PERSON')
+                .update({
+                    nama_person: formData.nama_person,
+                    usia_person: formData.usia_person,
+                    gender: formData.gender,
+                    id_kelompok: idKelompok,
+                    id_status: formData.id_status,
+                })
+                .eq('id_person', formData.id_person);
+
+            if (error) console.error('Error updating data');
+        } else {
+            const { error } = await supabase
+                .from('PERSON')
+                .insert([
+                    {
+                        nama_person: formData.nama_person,
+                        usia_person: formData.usia_person,
+                        gender: formData.gender,
+                        id_kelompok: idKelompok,
+                        id_status: formData.id_status,
+                    },
+                ]);
+
+            if (error) console.error('Error inserting data');
+        }
+        fetchData();
+        setModalOpen(false);
+    };
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
     };
 
     return (
@@ -116,6 +184,85 @@ export default function AksesData() {
                         </div>
                     </div>
                 )}
+            <Modal
+                isOpen={isModalOpen}
+                onRequestClose={() => setModalOpen(false)}
+                className="modal mx-auto mt-10 max-w-md bg-gray-800 p-4 rounded-lg text-gray-100 w-[90%]"
+                overlayClassName="modal-overlay fixed inset-0 bg-black bg-opacity-50"
+            >
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        handleSave();
+                    }}
+                    className="space-y-4"
+                >
+                    <input name="id_person" type="hidden" value={formData.id_person || ''} />
+                    <label className="block">
+                        <span className="">Nama:</span>
+                        <input
+                            name="nama_person"
+                            value={formData.nama_person || ''}
+                            onChange={handleChange}
+                            required
+                            className="form-input text-gray-800 mt-1 block w-full bg-gray-100 px-1 py-1 outline-none"
+                            placeholder="Masukkan nama"
+                        />
+                    </label>
+                    <label className="block">
+                        <span className="">Usia:</span>
+                        <input
+                            name="usia_person"
+                            type="number"
+                            value={formData.usia_person || ''}
+                            onChange={handleChange}
+                            required
+                            className="form-input text-gray-800 mt-1 block w-full bg-gray-100 px-1 py-1 outline-none"
+                            placeholder="Masukkan usia"
+                        />
+                    </label>
+                    <label className="block">
+                        <span className="">Gender:</span>
+                        <select
+                            name="gender"
+                            value={formData.gender || ''}
+                            onChange={handleChange}
+                            required
+                            className="form-select text-gray-800 mt-1 block w-full bg-gray-100 px-1 py-1 outline-none"
+                        >
+                            <option value="">Pilih gender...</option>
+                            <option value="L">Laki-laki</option>
+                            <option value="P">Perempuan</option>
+                        </select>
+                    </label>
+                    <label className="block">
+                        <span className="">Status:</span>
+                        <select
+                            name="id_status"
+                            value={formData.id_status || ''}
+                            onChange={handleChange}
+                            required
+                            className="form-select text-gray-800 mt-1 block w-full bg-gray-100 px-1 py-1 outline-none"
+                        >
+                            <option value="">Pilih status...</option>
+                            {statusChoice.map((item) => (
+                                <option key={item.id_status} value={item.id_status}>
+                                    {item.nama_status}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+
+                    <div className="flex justify-center items-center">
+                        <button
+                            type="submit"
+                            className="btn-primary mx-auto mt-4 px-4 py-2 text-gray-800 font-semibold rounded-lg bg-green-300 hover:bg-green-100"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </Modal>
         </div>
     );
 }

@@ -8,16 +8,24 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 export default function Home() {
     const [dataKelompokVisible, setDataKelompokVisible] = useState(false);
     const [KELOMPOK, setKELOMPOK] = useState(null);
+    const [loading, setLoading] = useState(true);
     const toggleKelompokDropdown = () => {
         setDataKelompokVisible(!dataKelompokVisible);
     };
 
     useEffect(() => {
         const fetchData = async () => {
-            let { data, error } = await supabase
-                .from('KELOMPOK')
-                .select('*');
-            setKELOMPOK(data);
+            try {
+                setLoading(true);
+                let { data, error } = await supabase
+                    .from('KELOMPOK')
+                    .select('*');
+                setKELOMPOK(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                setLoading(false);
+            }
         };
         fetchData();
     }, []);
@@ -29,18 +37,22 @@ export default function Home() {
                 </div>
                 <div className='pt-3 text-gray-100'>
                     <div className='pb-2 px-auto cursor-pointer select-none' onClick={toggleKelompokDropdown}>Akses Data</div>
-                    {dataKelompokVisible && KELOMPOK && (
-                        <div className=''>
-                            {KELOMPOK.map((item, index) => (
-                                <Link to={`/akses-data/${item.id_kelompok}`} key={index} className='cursor-pointer'>
-                                    <div className='py-2 pl-5 hover:bg-gray-500' key={index}>{item.nama_kelompok}</div>
-                                </Link>
-                            ))}
-                        </div>
+                    {dataKelompokVisible && loading ? (
+                        <div className='py-2 pl-5'>Loading...</div>
+                    ) : (
+                        dataKelompokVisible && KELOMPOK && (
+                            <div className=''>
+                                {KELOMPOK.map((item, index) => (
+                                    <Link to={`/akses-data/${item.id_kelompok}`} key={index} className='cursor-pointer'>
+                                        <div className='py-2 pl-5 hover:bg-gray-500' key={index}>{item.nama_kelompok}</div>
+                                    </Link>
+                                ))}
+                            </div>
+                        )
                     )}
                 </div>
                 <div className='pt-3 text-gray-100'>
-                    Summary Kelompok [soon]
+                    Summary Kelompok
                 </div>
             </div>
             <div className='px-10 py-5 border-b border-gray-500'>
@@ -48,13 +60,13 @@ export default function Home() {
                     Pelaporan
                 </div>
                 <div className='pt-3 text-gray-100'>
-                    Pelaporan Turba [soon]
+                    Pelaporan Turba
                 </div>
                 <div className='pt-3 text-gray-100'>
-                    Pelaporan KU [soon]
+                    Pelaporan KU
                 </div>
                 <div className='pt-3 text-gray-100'>
-                    Pelaporan Lainnya [soon]
+                    Pelaporan Lainnya
                 </div>
             </div>
             <div className='px-10 py-5 border-b border-gray-500'>
@@ -62,7 +74,7 @@ export default function Home() {
                     Presensi
                 </div>
                 <div className='pt-3 text-gray-100'>
-                    Pengajian Remaja Desa [soon]
+                    Pengajian Remaja Desa
                 </div>
             </div>
         </div>
