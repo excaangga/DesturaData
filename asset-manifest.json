@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/DesturaData/static/css/main.664b51c9.css",
+    "main.js": "/DesturaData/static/js/main.1a02c5f3.js",
+    "static/js/787.175b124f.chunk.js": "/DesturaData/static/js/787.175b124f.chunk.js",
+    "index.html": "/DesturaData/index.html",
+    "main.664b51c9.css.map": "/DesturaData/static/css/main.664b51c9.css.map",
+    "main.1a02c5f3.js.map": "/DesturaData/static/js/main.1a02c5f3.js.map",
+    "787.175b124f.chunk.js.map": "/DesturaData/static/js/787.175b124f.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.664b51c9.css",
+    "static/js/main.1a02c5f3.js"
+  ]
+}
