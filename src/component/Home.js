@@ -2,8 +2,8 @@ import { createClient } from '@supabase/supabase-js';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-const supabaseUrl = 'https://fjqkgesfphrdvtuvgxvt.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqcWtnZXNmcGhyZHZ0dXZneHZ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTMyNDUxMzksImV4cCI6MjAwODgyMTEzOX0.OqCMygU_Y1ugMtXRrN7YPQuGSqOWJ9cT3AFAqFF-BEw';
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 export default function Home() {
     const [dataKelompokVisible, setDataKelompokVisible] = useState(false);
