@@ -78,6 +78,7 @@ export default function Home() {
 
             <div className="px-10 py-5 border-b border-gray-500">
                 <div className="text-gray-500">Presensi</div>
+                {/*
                 <div className="pt-3 text-gray-100">
                     <Link
                         to={`/pengajian`}
@@ -86,6 +87,7 @@ export default function Home() {
                         Manajemen Pengajian
                     </Link>
                 </div>
+                */}
                 <div className="pt-3 text-gray-100">
                     <div
                         className="pb-2 cursor-pointer select-none"
